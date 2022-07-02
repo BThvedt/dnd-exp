@@ -1,46 +1,35 @@
-# Getting Started with Create React App
+How the json works
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+It can be done in one of two ways. You can have an 'editable_components' array defined, with a semi-rigid structure, or you can use special keys that start with d\_ to define the structure.
 
-## Available Scripts
+The items are arranged into sections, areas, and zones. A zone can contain one or more areas, and an area can contain one or more sections. Each sections can define on it's own if things can be added, removed, or sorted, and what can be dropped into it.
 
-In the project directory, you can run:
+When defining a structure, the type can be 'area', 'section' or 'zone', but no matter what, it always gets formatted into the sayme type of structure:
 
-### `npm start`
+    {
+    		areas: [
+    				{
+    						sections: [
+    								{
+    										items: [
+    											{item}
+    										]
+    								}
+    						]
+    				}
+    		]
+    }
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The 'zone' is the root level. Whichever root level is defined, it always gets formatted this way, and each 'zone', area, section, and item will get a unique id that will look like this z1a1 (for an area) or z2s3a2i4 (for an item).. etc.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+When defining the structure, you need a title and type at the root level. Wheter or not you break it up into area, sections, is up to you, but there has to be "items" each of which represent some kind of component in that page.
 
-### `npm test`
+When defining a zone, stray items get put into their own area. When defining an area, stray items get put into their own section. Sections and areas can have their own
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+There are some special classes 'single_area', 'multiple_sections' etc that are added - just for styling. And although the root level json is always a 'zone', it retains the 'type' that was defined (again, might be useful for styling i dunno, might change that later)
 
-### `npm run build`
+Although defining an 'editable\*components' section is easier to understand, it's not convienent in actual practice. So in practice, I prefer to define things with the d\_ keys in the JSON
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+to define an area use a d_type: zone or d_type: area (or section) and a d_name: (a unique name), a d_title if the root, and a d_parent if a subsection. Items only need a d_parent.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Then the code refactors the json on the front end into the editable_components structure, (alternate ids might be needed, save that for later) and then goes from there.
